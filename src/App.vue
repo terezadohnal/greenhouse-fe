@@ -22,3 +22,15 @@ export default {
 }
 
 </script>
+
+<style>
+.nav_element {
+  font-family: "Outfit", sans-serif;
+  font-size: 24px;
+  line-height: 27px;
+  text-transform: capitalize;
+  color: #40242b;
+  font-weight: normal;
+}
+
+</style>
