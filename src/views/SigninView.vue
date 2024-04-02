@@ -89,7 +89,8 @@ export default {
 
     clear () {
       this.$refs.form.reset()
-      this.name = ''
+      this.firstName = ''
+      this.lastName = ''
       this.email = ''
       this.username = ''
       this.password = ''
