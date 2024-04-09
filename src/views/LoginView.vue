@@ -23,7 +23,7 @@
       <br>
       <div align="center" justify="center">
         Don't have an account?<br>
-        <v-btn class="mt-1" rounded="xl" flat variant="outlined" color="dark-green" :to="{name: 'home'}">Create new account</v-btn>
+        <v-btn class="mt-1" rounded="xl" flat variant="outlined" color="dark-green" :to="{name: 'signin'}">Create new account</v-btn>
       </div>
     </v-card>
   </div>
