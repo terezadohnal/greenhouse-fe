@@ -1,6 +1,5 @@
 <template>
-  <!--after creating UserStore add: error, loggingMessage, isLoggingIn-->
-  <div class="ma-4 pa-4"> <!--v-else-->
+  <div class="ma-4 pa-4">
     <v-card class="mx-auto my-8" variant="tonal" height="400px" width="420px" color="card_color-darken-4" rounded="xl"
             style="display:flex; flex-direction:column">
       <v-form class="mx-4" v-model="formValid" lazy-validation ref="form" align="center" justify="center">
@@ -8,16 +7,16 @@
             class="mt-10"
             label="Username"
             v-model="username"
-            :rules="usernameRules"
+            :rules="[rules.required]"
         ></v-text-field>
         <v-text-field
             class="my-2"
             label="Password"
             v-model="password"
             type="password"
-            :rules="[rules.required, rules.length]"
+            :rules="[rules.required]"
         ></v-text-field>
-        <v-btn :to="{name: 'home'}" color="dark-green" class="mb-8">Log me in</v-btn>
+        <v-btn @click="login()" color="dark-green" class="mb-8">Log me in</v-btn>
       </v-form>
 
       <br>
@@ -30,6 +29,9 @@
 </template>
 
 <script>
+import { mapStores } from "pinia";
+import { useUserStore } from "@/store/UserStore";
+
 export default {
   name: "LoginView",
 
@@ -40,21 +42,25 @@ export default {
       formValid: true,
       rules: {
         required: value => !!value || 'Required.',
-        length: value => (value && value.length >= 5) || 'Username must be at least 5 characters',
       },
-      usernameRules: [
-        v => !!v || 'Username is required',
-        v => (v && v.length >= 5) || 'Username must be at least 5 characters',
-      ],
     }
   },
 
   computed: {
+    ...mapStores(useUserStore),
   },
 
   methods: {
     async login(){
+      await this.$refs.form.validate();
+      if (!this.formValid) return;
 
+      await useUserStore().login(this.username, this.password)
+
+      if (!useUserStore().error) {
+        this.$router.push(useUserStore().afterLoginRoute ?? {name: 'home'})
+        useUserStore().setAfterLoginRoute(null)
+      }
     }
   }
 }

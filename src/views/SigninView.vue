@@ -46,6 +46,8 @@
 </template>
 
 <script>
+import { mapStores } from "pinia";
+import { useUserStore } from "@/store/UserStore.js";
 
 export default {
   name: "SigninView",
@@ -67,7 +69,7 @@ export default {
           const pattern = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
           return pattern.test(value) || 'At least one number, uppercase and lowercase letter. Minimum 8 characters.'
         },
-        length: value => (value && value.length >= 5) || 'At least 5 characters',
+        length: value => (value && value.length >= 4) || 'At least 4 characters',
       },
       usernameRules: [
         v => !!v || 'Username is required',
@@ -78,13 +80,24 @@ export default {
   },
 
   computed: {
+    ...mapStores(useUserStore)
   },
 
   methods: {
     async register(){
       await this.$refs.form.validate();
       if (!this.formValid) return;
-      // add the rest after creating userStore
+
+      await useUserStore().register(this.firstName, this.lastName, this.email, this.username, this.password)
+
+      if (!useUserStore().error) {
+        await useUserStore().login(this.username, this.password)
+
+        if (!useUserStore().error) {
+          this.$router.push(useUserStore().afterLoginRoute ?? {name: 'home'})
+          useUserStore().setAfterLoginRoute(null)
+        }
+      }
     },
 
     clear () {

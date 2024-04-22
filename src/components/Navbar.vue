@@ -29,8 +29,11 @@
           ></v-btn>
         </template>
         <v-list>
-          <v-list-item @click="login()"> <!--v-if="!userStore.isAuthenticated" @click="login()"-->
+          <v-list-item v-if="!isAuthenticated" @click="login()">
             <v-list-item-title>Log in</v-list-item-title>
+          </v-list-item>
+          <v-list-item v-if="isAuthenticated" @click="logout()">
+            <v-list-item-title>Log out</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -39,6 +42,9 @@
 </template>
 
 <script>
+import {useUserStore} from "@/store/UserStore";
+import {mapStores} from "pinia";
+
 export default {
   name: "Navbar",
 
@@ -47,11 +53,26 @@ export default {
       userMenuShown: false,
     }
   },
+
+  computed: {
+    ...mapStores(useUserStore),
+
+    isAuthenticated() {
+      return useUserStore().isAuthenticated
+    },
+  },
+
   methods: {
     login() {
       this.$router.push({name: 'login'});
       this.userMenuShown = false;
     },
+
+    logout() {
+      useUserStore().logout();
+      this.$router.push({name: 'home'}); // later to Landing Page, because not logged users can't access anything
+      this.userMenuShown = false;
+    }
   }
 }
 </script>
