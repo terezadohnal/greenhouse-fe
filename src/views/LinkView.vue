@@ -3,6 +3,10 @@
 		<h1>Link</h1>
 		<v-btn :to="{name: 'home'}">Home</v-btn>
 	</div>
+  <div>
+  <h1>Sensores</h1>
+  <v-btn :to="{name: 'sensor'}">Sensores</v-btn>
+  </div>
 </template>
 <script>
 export default {
