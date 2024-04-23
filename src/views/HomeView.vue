@@ -5,10 +5,9 @@ export default {
 </script>
 
 <template>
-	<div>
-		<h1>Home</h1>
-	</div>
-	<v-btn :to="{name: 'link'}">Link</v-btn>
+  <div>
+    <h1>Home</h1>
+  </div>
 </template>
 
 <style>
