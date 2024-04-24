@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <Navbar/>
+    <Navbar v-if="isAuthenticated"/>
     <v-main>
 		<router-view></router-view>
     </v-main>
@@ -9,10 +9,20 @@
 
 <script>
 import Navbar from "@/components/Navbar.vue";
+import { mapStores } from "pinia";
+import { useUserStore } from "@/store/UserStore.js";
 
 export default {
   name: 'App',
   components: {Navbar},
+
+  computed: {
+    ...mapStores(useUserStore),
+
+    isAuthenticated() {
+      return useUserStore().isAuthenticated
+    },
+  },
 
   data () {
 	return {
@@ -28,9 +38,19 @@ export default {
   font-family: "Outfit", sans-serif;
   font-size: 24px;
   line-height: 27px;
+  color: #323232;
   text-transform: capitalize;
-  color: #40242b;
   font-weight: normal;
+}
+
+.landing_page_title {
+  font-family: "Outfit", sans-serif;
+  font-size: 90px;
+  text-transform: capitalize;
+  color:#FAFFF3;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 2px #323232;
 }
 
 </style>
