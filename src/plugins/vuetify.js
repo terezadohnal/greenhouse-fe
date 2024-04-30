@@ -12,8 +12,18 @@ import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
+
+const customTheme = {
+  dark: false,
+  colors: {
+    "dark-green": '#82C325',
+  }
+}
 export default createVuetify({
   theme: {
-    defaultTheme: 'dark',
+    defaultTheme: 'customTheme',
+    themes: {
+      customTheme
+    }
   },
 })
