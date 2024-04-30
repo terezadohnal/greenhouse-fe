@@ -16,7 +16,9 @@ export const useUserStore = defineStore('user', {
             error: null,
             isLoggingIn: false,
             loginMessage: null,
-            afterLoginRoute: null
+            afterLoginRoute: null,
+            users: [],
+            isLoading: false
         }
     },
 
@@ -40,7 +42,6 @@ export const useUserStore = defineStore('user', {
                 this.token = response.data.access_token; // backend?
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.token;
                 localStorage.setItem('token', this.token);
-                console.log(this.token)
 
                 this.error = null;
                 this.loginMessage = null;
@@ -75,5 +76,18 @@ export const useUserStore = defineStore('user', {
         setAfterLoginRoute(route) {
             this.afterLoginRoute = route;
         },
+
+        async loadAll() {
+            try {
+                this.isLoading = true;
+                const response = await axios.get(config.backendUrl + '/users/');
+                this.users = response.data;
+                this.error = null;
+                this.isLoading = false;
+                console.log(useUserStore().users)
+            } catch {
+                this.error = 'Cannot load events'
+            }
+        }
     }
 })

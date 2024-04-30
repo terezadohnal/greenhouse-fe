@@ -13,7 +13,7 @@
         <v-btn class="mx-2">
           <span class="nav_element">Sensors</span>
         </v-btn>
-        <v-btn class="mx-2">
+        <v-btn :to="{name: 'settings'}" class="mx-2">
           <span class="nav_element">Settings</span>
         </v-btn>
       </div>
