@@ -53,4 +53,20 @@ export default {
   text-shadow: 2px 2px 2px #323232;
 }
 
+.body_text {
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  line-height: 27px;
+  color: #323232;
+}
+
+.subtitle {
+  font-family: "Roboto", sans-serif;
+  font-size: 20px;
+  line-height: 27px;
+  color: #323232;
+  font-weight: bolder;
+  letter-spacing: 1px;
+}
+
 </style>
