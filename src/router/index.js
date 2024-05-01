@@ -3,6 +3,7 @@ import HomeView from "../views/HomeView.vue";
 import SettingsView from "@/views/SettingsView.vue"
 import LoginView from "@/views/LoginView.vue";
 import SigninView from "@/views/SigninView.vue";
+import ConfigurationView from "@/views/ConfigurationView.vue";
 
 const routes = [
     {
@@ -24,6 +25,11 @@ const routes = [
         path: "/signin",
         name: "signin",
         component: SigninView
+    },
+    {
+        path: "/config",
+        name: "config",
+        component: ConfigurationView
     }
 ]
 const router = createRouter({

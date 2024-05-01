@@ -67,11 +67,11 @@ export default {
 
 
 
-<style scoped>
+<style>
 
 v-table {
   width: 100%;
-  max-width: 400px; /* Adjust as needed */
+  max-width: 400px;
 }
 
 </style>
