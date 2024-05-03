@@ -72,7 +72,6 @@ export default {
   created() {
     useUserStore().loadAll()
   }
-
 }
 </script>
 

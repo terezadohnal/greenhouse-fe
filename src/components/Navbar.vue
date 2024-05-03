@@ -10,6 +10,9 @@
         <v-btn :to="{ name: 'home' }" class="mr-2">
           <span class="nav_element">Home</span>
         </v-btn>
+        <v-btn :to="{name: 'config'}" class="mr-2">
+          <span class="nav_element">Configuration</span>
+        </v-btn>
         <v-btn :to="{ name: 'sensors' }" class="mx-2">
           <span class="nav_element">Sensors</span>
         </v-btn>

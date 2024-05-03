@@ -5,6 +5,7 @@ import SensorsView from '@/views/SensorsView.vue';
 import LoginView from '@/views/LoginView.vue';
 import SigninView from '@/views/SigninView.vue';
 import LandingView from '@/views/LandingView.vue';
+import ConfigurationView from "@/views/ConfigurationView.vue";
 
 const routes = [
   {
@@ -37,7 +38,13 @@ const routes = [
     name: 'signin',
     component: SigninView,
   },
+  {
+    path: "/config",
+    name: "config",
+    component: ConfigurationView
+  }
 ];
+
 const router = createRouter({
   history: createWebHistory(),
   routes,
