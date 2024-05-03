@@ -20,6 +20,7 @@ const customTheme = {
   dark: false,
   colors: {
     "dark-green": '#82C325',
+    "white": "#FFFFFF",
   }
 }
 export default createVuetify({
