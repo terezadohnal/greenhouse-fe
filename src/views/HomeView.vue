@@ -46,7 +46,6 @@ export default {
        
 
         if (this.selectedDate && this.selectedTime) {
-        // Zde můžete provést akci, když jsou datum a čas vyplněny
         console.log(this.selectedDate);
         console.log(this.selectedTime);
         this.dialog = false;
@@ -69,6 +68,7 @@ export default {
         this.selectedDate = null;
         this.selectedTime = null;
         this.dialog = false;
+        this.showAlert = false;
         
       },
     }
