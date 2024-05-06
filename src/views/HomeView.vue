@@ -16,46 +16,46 @@ export default {
           { label: 'Measurement 10', value: 'This measurement took place on...' },
     
         ],
-        items: [
-        { title: 'Right now' },
-        { title: 'Schedule' },
-      ],
-      isCardVisible: false,
+       
+     
       itemsPerPage: 5,
       totalItems: 10,
       selectedDate: null,
       selectedTime: null,
       dialog: false,
       panel: null,
+      showAlert: false,
+      menuOpen: false,
       };
       
     },
+    computed: {
+      menuIcon() {
+      return this.menuOpen ? 'mdi mdi-chevron-up' : 'mdi-chevron-down';
+    },
+    },
     methods: {
-      //showCard() {
-        //this.isCardVisible = true;
-      //},
-      //hideCard() {
-       // this.isCardVisible = false;
-      //},
+     
       startMeasurement() {
         //TODO
       },
       scheduleMeasurement() {
         //TODO
-        this.dialog = false;
-        if (this.selectedDate === null) {
-         alert('Select date is required.');
-        return;
         
-      }
-      if (this.selectedTime === null) {
-        alert('Select time is required');
-       return;
-        
-      }
+       
+       
+
+        if (this.selectedDate && this.selectedTime) {
+        // Zde můžete provést akci, když jsou datum a čas vyplněny
         console.log(this.selectedDate);
         console.log(this.selectedTime);
-        this.isCardVisible = false;
+        this.dialog = false;
+        this.showAlert = false;
+        selectedDate = null;
+        selectedTime = null;
+      } else {
+        this.showAlert = true;
+      }
       },
       downloadMeasurement(measurement) {
         console.log(measurement);
@@ -64,6 +64,12 @@ export default {
       viewDetail(measurement) {
         console.log(measurement);
         //TODO
+      },
+      closeDialog(){
+        this.selectedDate = null;
+        this.selectedTime = null;
+        this.dialog = false;
+        
       },
     }
 }
@@ -112,27 +118,28 @@ export default {
         </v-card>
       </v-col>
 
-      <!-- Button to start measurement -->
-      <div class="text-center">
-        <v-menu open-on-hover >
-          <template v-slot:activator="{props }" >
-            <div style="padding: 12px">
-              <v-btn color="dark-green" v-bind="props">
-                <span class = "text-white"> Measure</span>
-                <v-icon color="white">mdi-chevron-down</v-icon>
-              </v-btn>
-            </div>
-          </template>
-          <v-list>
+     <!-- Button to start measurement -->
+    <v-menu
+      transition="slide-y-transition"  v-model="menuOpen">
+      <template v-slot:activator="{ props }">
+        <div style="padding: 12px">
+          <v-btn color="dark-green" v-bind="props">
+            <span class = "text-white"> Measure</span>
+            <v-icon color="white">{{ menuIcon }}</v-icon>
+          </v-btn>
+        </div>
+      </template>
+
+      <v-list>
             <v-list-item style="cursor: pointer;">
               <v-list-item-title>Right now</v-list-item-title>
             </v-list-item>
-            <v-list-item style="cursor: pointer;" >
-              <v-list-item-title @click="dialog = true" >Schedule</v-list-item-title>   
+            <v-list-item @click="dialog = true" style="cursor: pointer;" >
+              <v-list-item-title >Schedule</v-list-item-title>   
             </v-list-item>
-           </v-list>
-        </v-menu>
-      </div>
+        </v-list>
+    </v-menu>
+  
     </v-row>
 
    <!-- Dialog for date and time selection -->
@@ -140,7 +147,7 @@ export default {
       <v-card>
         <!-- Close icon positioned at the top right corner -->
         <div style="position: relative;">
-          <v-icon @click="dialog = false" color="grey-lighten-1" style="position: absolute; top: 15px; right: 15px;">mdi mdi-close</v-icon>
+          <v-icon @click="closeDialog()" color="grey-lighten-1" style="position: absolute; top: 15px; right: 15px;">mdi mdi-close</v-icon>
         </div>
 
         <!-- Title for date and time selection -->
@@ -156,12 +163,16 @@ export default {
             format="24hr"
             scrollable
             title=""
+            style=" padding: 10px;"
           ></v-time-picker>
         </v-row>
+        <v-alert v-model="showAlert" type="error" dismissible style="margin: 10px">
+          Please fill in the date and time!
+        </v-alert>
 
         <!-- Button to schedule measurement -->
         <v-card-actions class="justify-center">
-          <v-btn @click="scheduleMeasurement()" color="white" rounded="xl" class="mb-8 bg-dark-green" style="width: 300px;">Schedule measurement</v-btn>
+          <v-btn @click="scheduleMeasurement()" color="white" rounded="xl" class=" bg-dark-green" style="width: 300px;">Schedule measurement</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -182,16 +193,39 @@ export default {
 .v-date-picker-month__day--selected .v-btn {
   background-color: green;
 }
+
 */
 
-.v-card-actions button{
-  margin-bottom: 0%;
-}
 
 .v-card-actions {
-  height: 45px;
-  margin-top: 1%;
+  height: 50px;
+  margin: 1%;
+}
+
+.v-date-picker .v-date-picker-header__content {
+  font-size: 22px;
+}
+
+.v-time-picker .v-time-picker-controls__time__btn.v-btn--density-default.v-btn{
+  width: 74px;
+    height: 63px;
+    font-size: 27px;
 }
 
 
+.v-time-picker .v-time-picker-controls__time__separator{
+     font-size: 38px;
+    height: 80px;
+    width: 22px;
+    text-align: center;
+}
+
+.v-time-picker .v-time-picker-controls{
+  margin-bottom: 10px;
+}
+/*
+.v-time-picker .v-picker{
+  padding: 10px;
+}
+*/
 </style>
