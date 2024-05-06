@@ -1,4 +1,4 @@
-import { defineStore } from "pinia";
+import {defineStore} from "pinia";
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
 import config from "@/config";
@@ -16,7 +16,9 @@ export const useUserStore = defineStore('user', {
             error: null,
             isLoggingIn: false,
             loginMessage: null,
-            afterLoginRoute: null
+            afterLoginRoute: null,
+            users: [],
+            isLoading: false
         }
     },
 
@@ -40,7 +42,6 @@ export const useUserStore = defineStore('user', {
                 this.token = response.data.access_token; // backend?
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.token;
                 localStorage.setItem('token', this.token);
-                console.log(this.token)
 
                 this.error = null;
                 this.loginMessage = null;
@@ -57,7 +58,7 @@ export const useUserStore = defineStore('user', {
             localStorage.removeItem('token');
         },
 
-        async register(first_name, last_name, email, username, password){
+        async register(first_name, last_name, email, username, password) {
             try {
                 this.isLoggingIn = true;
                 const data = {first_name, last_name, email, username, password};
@@ -74,6 +75,48 @@ export const useUserStore = defineStore('user', {
 
         setAfterLoginRoute(route) {
             this.afterLoginRoute = route;
+        },
+
+        async loadAll() {
+            try {
+                this.isLoading = true;
+                const response = await axios.get(config.backendUrl + '/users/');
+                this.users = response.data;
+                this.error = null;
+                this.isLoading = false;
+            } catch {
+                this.error = 'Cannot load events'
+            }
+        },
+
+        async editUser(id, first_name, last_name, email, username, role) {
+            try {
+                const data = {
+                    "email": email,
+                    "username": username,
+                    "first_name": first_name,
+                    "last_name": last_name,
+                    "role": role
+                };
+                await axios.put(config.backendUrl + '/edit/' + id, data);
+                this.error = null;
+
+            } catch {
+                this.error = 'User information can\'t be updated.';
+            }
+        },
+
+        async resetPassword(id, newPassword) {
+            try {
+                const data = {
+                    "new_password": newPassword,
+                };
+                await axios.put(config.backendUrl + '/password-reset/' + id, data);
+                this.error = null;
+
+            } catch {
+                this.error = 'Can\'t reset password.';
+            }
         },
     }
 })

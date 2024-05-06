@@ -7,13 +7,16 @@
       </v-app-bar-title>
 
       <div class="hidden-sm-and-down">
-        <v-btn :to="{name: 'home'}" class="mr-2">
+        <v-btn :to="{ name: 'home' }" class="mr-2">
           <span class="nav_element">Home</span>
         </v-btn>
-        <v-btn class="mx-2">
+        <v-btn :to="{name: 'config'}" class="mr-2">
+          <span class="nav_element">Configuration</span>
+        </v-btn>
+        <v-btn :to="{ name: 'sensors' }" class="mx-2">
           <span class="nav_element">Sensors</span>
         </v-btn>
-        <v-btn class="mx-2">
+        <v-btn :to="{name: 'settings'}" class="mx-2">
           <span class="nav_element">Settings</span>
         </v-btn>
       </div>
@@ -22,11 +25,7 @@
 
       <v-menu anchor="bottom end" v-model="userMenuShown">
         <template v-slot:activator="{ props }">
-          <v-btn
-              color="black"
-              icon="mdi-account-circle"
-              v-bind="props"
-          ></v-btn>
+          <v-btn color="black" icon="mdi-account-circle" v-bind="props"></v-btn>
         </template>
         <v-list>
           <v-list-item v-if="isAuthenticated" @click="logout()">
@@ -39,35 +38,34 @@
 </template>
 
 <script>
-import {useUserStore} from "@/store/UserStore";
-import {mapStores} from "pinia";
+import { useUserStore } from '@/store/UserStore';
+import { mapStores } from 'pinia';
 
 export default {
-  name: "Navbar",
+  name: 'Navbar',
 
   data() {
     return {
       userMenuShown: false,
-    }
+    };
   },
 
   computed: {
     ...mapStores(useUserStore),
 
     isAuthenticated() {
-      return useUserStore().isAuthenticated
+      return useUserStore().isAuthenticated;
     },
   },
 
   methods: {
     logout() {
       useUserStore().logout();
-      this.$router.push({name: 'landing'});
+      this.$router.push({ name: 'landing' });
       this.userMenuShown = false;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
-<style>
-</style>
+<style></style>

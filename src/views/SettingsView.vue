@@ -1,41 +1,26 @@
-<script>
-
-export default {
-  name: "SettingsView",
-    data() {
-      return {
-        userData: [
-          { label: 'Name', value: 'xxx' },
-          { label: 'Email Address', value: 'xx' },
-          { label: 'Username', value: 'xx' },
-          { label: 'Password', value: '********' },
-          { label: 'Role', value: 'admin' },
-        ],
-        roleData: [
-          { name: 'Lena Todosijević', role: 'user' },
-          { name: 'Kateřina Dvořáková', role: 'user' },
-          { name: 'Tereza Dohnalová', role: 'user' },
-          { name: 'Juraj Křiššak', role: 'user' },
-          { name: 'Eliška Chylíková', role: 'admin' },
-        ]
-      };
-    }
-}
-
-</script>
-
 <template>
-  <v-container fluid>
+  <v-container fluid class="mt-8">
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6">
-        <v-card>
-          <v-card-title class="headline">User Settings</v-card-title>
-          <v-table density="compact">
+        <v-card elevation="4">
+          <v-card-title class="subtitle">User Settings</v-card-title>
+          <v-table density="comfortable">
             <tbody>
-            <tr v-for="item in userData" :key="item.label">
-              <td>{{ item.label }}:</td>
-              <td>{{ item.value }}</td>
-              <td class="edit-icon-cell"><v-icon @click="editItem(item)">mdi-pencil</v-icon></td>
+            <tr class="body_text">
+              <td>Name:</td>
+              <td>{{ userStore.user.firstName }} {{ userStore.user.lastName }}</td>
+            </tr>
+            <tr class="body_text">
+              <td>Email:</td>
+              <td>{{ userStore.user.email }}</td>
+            </tr>
+            <tr class="body_text">
+              <td>Username:</td>
+              <td>{{ userStore.user.username }}</td>
+            </tr>
+            <tr class="body_text">
+              <td>Role:</td>
+              <td>{{ userStore.user.role }}</td>
             </tr>
             </tbody>
           </v-table>
@@ -44,17 +29,19 @@ export default {
     </v-row>
   </v-container>
 
-  <v-container fluid>
+  <v-container fluid v-if="userStore.user.role === 'admin'">
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6">
-        <v-card>
-          <v-card-title class="headline">Permission Settings</v-card-title>
-          <v-table height="200px">
+        <v-card elevation="4">
+          <v-card-title class="subtitle">Permission Settings</v-card-title>
+          <v-table height="220px" density="comfortable">
             <tbody>
-            <tr v-for="item in roleData" :key="item.name">
-              <td>{{ item.name }}:</td>
-              <td>{{ item.role }}</td>
-              <td class="edit-icon-cell"><v-icon @click="editItem(item)">mdi-pencil</v-icon></td>
+            <tr class="body_text" v-for="oneUser in users" :key="oneUser.id">
+              <td>{{ oneUser.first_name }} {{ oneUser.last_name }}</td>
+              <td>{{ oneUser.role }}</td>
+              <td align="right" class="edit-icon-cell">
+                <edit-dialog :user="oneUser"></edit-dialog>
+              </td>
             </tr>
             </tbody>
           </v-table>
@@ -65,13 +52,37 @@ export default {
 
 </template>
 
+<script>
+import {useUserStore} from "@/store/UserStore";
+import {mapStores} from "pinia";
+import EditDialog from "@/components/EditUser.vue";
+export default {
+  name: "SettingsView",
+  data() {
+    return {};
+  },
 
+  components: {
+    EditDialog
+  },
 
-<style scoped>
+  computed: {
+    ...mapStores(useUserStore),
 
+    users() {
+      return useUserStore().users
+    }
+  },
+
+  created() {
+    useUserStore().loadAll()
+  }
+}
+</script>
+
+<style>
 v-table {
   width: 100%;
-  max-width: 400px; /* Adjust as needed */
+  max-width: 400px;
 }
-
 </style>
