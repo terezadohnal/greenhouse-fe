@@ -26,12 +26,16 @@ export default {
       panel: null,
       showAlert: false,
       menuOpen: false,
+      filterMenuOpen: false,
       };
       
     },
     computed: {
       menuIcon() {
       return this.menuOpen ? 'mdi mdi-chevron-up' : 'mdi-chevron-down';
+    },
+    menuIcon2() {
+      return this.filterMenuOpen ? 'mdi mdi-chevron-up' : 'mdi-chevron-down';
     },
     },
     methods: {
@@ -47,6 +51,8 @@ export default {
 
         if (this.selectedDate && this.selectedTime) {
         console.log(this.selectedDate);
+        console.log(this.selectedDate);
+
         console.log(this.selectedTime);
         this.dialog = false;
         this.showAlert = false;
@@ -78,47 +84,34 @@ export default {
 <template>
   <v-container fluid>
     <v-row justify="center">
-      <!-- Search icon
-      <v-col class="text-end">
-        <v-icon @click="" color="grey-lighten-1">mdi mdi-magnify</v-icon>
-      </v-col>
-      -->
-      <!-- Expansion panel for data filtering -->
-      <v-expansion-panels>
-        <v-expansion-panel title="Filter data" text="Filtering data to be done..."></v-expansion-panel>
-      </v-expansion-panels>
-    </v-row>
 
-    <v-row justify="center">
-      <v-col cols="12" sm="8" md="6">
-        <v-card>
-          <!-- Card title -->
-          <v-card-title class="headline">Measurements</v-card-title>
+    <!-- Button to start measurement -->
+    <v-menu
+      transition="slide-y-transition"  v-model="filterMenuOpen">
+      <template v-slot:activator="{ props }">
+        <div style="padding: 12px">
+          <v-btn color="white" v-bind="props">
+            <span class = "text-dark-green">Filter data</span>
+            <v-icon color="dark-green">{{ menuIcon2 }}</v-icon>
+          </v-btn>
+        </div>
+      </template>
 
-          <!-- Table of measurements -->
-          <v-table density="compact">
-            <tbody>
-              <tr v-for="item in userData" :key="item.label">
-                <!-- Measurement label -->
-                <td style="display: block;" class="font-weight-bold">{{ item.label }}</td>
+      <v-list>
+            <v-list-item style="cursor: pointer;">
+              <v-list-item-title>From oldest to newest</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="" style="cursor: pointer;" >
+              <v-list-item-title >From newest to oldest</v-list-item-title>   
+            </v-list-item>
+            <v-list-item @click="" style="cursor: pointer;" >
+              <v-list-item-title >Custom</v-list-item-title>   
+            </v-list-item>
+        </v-list>
+    </v-menu>
+    
 
-                <!-- Measurement value -->
-                <td>{{ item.value }}</td>
-
-                <!-- View and download icons -->
-                <td class="edit-icon-cell">
-                  <v-icon @click="viewDetail(item.label)" color="grey-lighten-1">mdi mdi-eye-outline</v-icon>
-                </td>
-                <td class="edit-icon-cell">
-                  <v-icon @click="downloadMeasurement(item.label)" color="grey-lighten-1">mdi mdi-download</v-icon>
-                </td>
-              </tr>
-            </tbody>
-          </v-table>
-        </v-card>
-      </v-col>
-
-     <!-- Button to start measurement -->
+       <!-- Button to start measurement -->
     <v-menu
       transition="slide-y-transition"  v-model="menuOpen">
       <template v-slot:activator="{ props }">
@@ -139,6 +132,42 @@ export default {
             </v-list-item>
         </v-list>
     </v-menu>
+      <!-- Search icon
+      <v-col class="text-end">
+        <v-icon @click="" color="grey-lighten-1">mdi mdi-magnify</v-icon>
+      </v-col>
+      -->
+      <!-- Expansion panel for data filtering -->
+     
+    </v-row>
+
+    <v-row justify="center">
+      <v-col cols="12" sm="8" md="6">
+        <v-card>
+          <!-- Card title -->
+          <v-card-title class="headline">History of measurements</v-card-title>
+
+          <!-- Table of measurements -->
+          <v-table height="300px" density="compact">
+            <tbody>
+              <tr v-for="item in userData" :key="item.label">
+                <!-- Measurement label -->
+                <td  class="font-weight-bold">{{ item.label }}</td>
+
+                <!-- Measurement value -->
+                <td>{{ item.value }}</td>
+
+                <!-- Download icons -->
+                <td class="edit-icon-cell">
+                  <v-icon @click="downloadMeasurement(item.label)" color="grey-lighten-1">mdi mdi-download</v-icon>
+                </td>
+              </tr>
+            </tbody>
+          </v-table>
+        </v-card>
+      </v-col>
+
+    
   
     </v-row>
 
