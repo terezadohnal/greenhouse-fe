@@ -14,7 +14,7 @@
     "roboto-fontface": "*",
     "vue": "^3.3.0",
     "vue-router": "^4.3.0",
-    "vuetify": "^3.0.0"
+    "vuetify": "^3.5.12"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
