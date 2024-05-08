@@ -69,4 +69,22 @@ export default {
   letter-spacing: 1px;
 }
 
+.filter_wrapper {
+  min-height: 2rem;
+  box-sizing: border-box;
+  border-bottom: 1px solid #E3E0DF;
+  position: sticky;
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+.new_measurement {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex: 1;
+}
+
 </style>

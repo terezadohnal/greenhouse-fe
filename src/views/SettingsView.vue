@@ -39,7 +39,7 @@
             <tr class="body_text" v-for="oneUser in users" :key="oneUser.id">
               <td>{{ oneUser.first_name }} {{ oneUser.last_name }}</td>
               <td>{{ oneUser.role }}</td>
-              <td align="right" class="edit-icon-cell">
+              <td align="right">
                 <edit-dialog :user="oneUser"></edit-dialog>
               </td>
             </tr>

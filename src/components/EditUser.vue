@@ -5,7 +5,7 @@
     </template>
 
     <template v-slot:default="{ isActive }">
-      <v-card prepend-icon="mdi-account" title="User Information">
+      <v-card prepend-icon="mdi-account" title="User Information" rounded="xl">
         <v-card-text class="mt-4">
           <v-form v-model="formValid" lazy-validation ref="form">
             <v-text-field clearable variant="outlined" label="Name" v-model="name"
