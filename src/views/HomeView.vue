@@ -36,7 +36,7 @@
 
     <v-container> <!-- Start measure-->
       <div class="new_measurement">
-        <v-menu open-on-click>
+        <v-menu open-on-click style="cursor: pointer;">
           <template v-slot:activator="{ props }">
             <v-btn color="dark-green" v-bind="props" @click="toggleMenu('measureMenuOpen')">
               <span class="text-white"> Measure</span>
