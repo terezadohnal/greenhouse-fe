@@ -7,10 +7,10 @@
       </v-app-bar-title>
 
       <div class="hidden-sm-and-down">
-        <v-btn :to="{ name: 'home' }" class="mr-2">
-          <span class="nav_element">Home</span>
+        <v-btn :to="{ name: 'home' }" class="mr-2 ml-12">
+          <span class="nav_element">Measurements</span>
         </v-btn>
-        <v-btn :to="{name: 'config'}" class="mr-2">
+        <v-btn :to="{name: 'config'}" class="mx-2">
           <span class="nav_element">Configuration</span>
         </v-btn>
         <v-btn :to="{ name: 'sensors' }" class="mx-2">
