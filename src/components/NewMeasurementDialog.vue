@@ -85,11 +85,13 @@
 
         <v-col>
           <v-col>
-            <text-h3>Acoustic emissions</text-h3>
-            <div class="d-flex justify-space-between">
+            <p class="text-h6">Acoustic emissions</p>
+            <v-divider class="py-2" />
+            <div class="d-flex ga-5">
               <v-btn
                 color="dark-green"
                 rounded="xl"
+                :disabled="this.measurementStore.recordingMode === 2"
                 @click="startAcousticMeasurement()"
               >
                 Start
@@ -97,6 +99,7 @@
               <v-btn
                 color="white"
                 rounded="xl"
+                :disabled="this.measurementStore.recordingMode !== 2"
                 @click="pauseAcousticMeasurement()"
               >
                 Pause
@@ -104,6 +107,7 @@
               <v-btn
                 color="red"
                 rounded="xl"
+                :disabled="this.measurementStore.recordingMode !== 2"
                 @click="stopAcousticMeasurement()"
               >
                 Stop
@@ -111,7 +115,8 @@
             </div>
           </v-col>
           <v-col>
-            <text-h3>RGB camera</text-h3>
+            <p class="text-h6">RGB camera</p>
+            <v-divider class="py-2" />
             <div>
               <v-btn
                 color="dark-green"
@@ -122,6 +127,17 @@
               </v-btn>
             </div>
           </v-col>
+
+          <v-row justify="center" class="my-2">
+            <v-alert
+              max-width="80%"
+              v-model="showAlert"
+              closable
+              title="Recording failed! Please try again."
+              type="error"
+              variant="tonal"
+            ></v-alert>
+          </v-row>
         </v-col>
       </v-card>
     </template>
@@ -145,6 +161,7 @@ export default {
       selectedTime: null,
       panel: null,
       showAlert: false,
+      errorMessage: null,
       rules: {
         required: (value) => !!value || 'Required.',
       },
@@ -167,27 +184,34 @@ export default {
     },
 
     async startAcousticMeasurement() {
-      const { startAEMeasurement } = useMeasurementStore();
-      console.log('start acoustic measurement');
-      await startAEMeasurement();
+      await this.measurementStore.startAEMeasurement();
+
+      if (this.measurementStore.error) {
+        this.showAlert = true;
+        this.errorMessage = this.measurementStore.error;
+      }
     },
 
     async pauseAcousticMeasurement() {
-      const { pauseAEMeasurement } = useMeasurementStore();
-      console.log('pause acoustic measurement');
-      await pauseAEMeasurement();
+      await this.measurementStore.pauseAEMeasurement();
     },
 
     async stopAcousticMeasurement() {
-      const { stopAEMeasurement } = useMeasurementStore();
-      console.log('stop acoustic measurement');
-      await stopAEMeasurement();
+      await this.measurementStore.stopAEMeasurement();
+
+      if (this.measurementStore.error) {
+        this.showAlert = true;
+        this.errorMessage = this.measurementStore.error;
+      }
     },
 
     async startRGBMeasurement() {
-      const { startRGBMeasurement } = useMeasurementStore();
-      console.log('start RGB measurement');
-      await startRGBMeasurement();
+      await this.measurementStore.startRGBMeasurement();
+
+      if (this.measurementStore.error) {
+        this.showAlert = true;
+        this.errorMessage = this.measurementStore.error;
+      }
     },
 
     closeDialog() {

@@ -7,7 +7,8 @@ export const useMeasurementStore = defineStore('measurement', {
     return {
       error: null,
       isLoading: false,
-      status: 'inactive',
+      recordingMode: null,
+      status: 0,
     };
   },
 
@@ -18,8 +19,8 @@ export const useMeasurementStore = defineStore('measurement', {
         const response = await axios.post(
           config.backendUrl + '/acoustic/start_rec'
         );
-        console.log({ response });
-        this.status = 'active';
+        this.recordingMode = response.data.recording_mode;
+        this.status = response.data.status;
         this.error = null;
         this.isLoading = false;
       } catch {
@@ -32,9 +33,8 @@ export const useMeasurementStore = defineStore('measurement', {
         const response = await axios.post(
           config.backendUrl + '/acoustic/pause_rec'
         );
-
-        console.log({ response });
-        this.status = 'paused';
+        this.recordingMode = response.data.recording_mode;
+        this.status = response.data.status;
         this.error = null;
         this.isLoading = false;
       } catch {
@@ -47,8 +47,8 @@ export const useMeasurementStore = defineStore('measurement', {
         const response = await axios.post(
           config.backendUrl + '/acoustic/stop_rec'
         );
-        console.log({ response });
-        this.status = 'stopped';
+        this.recordingMode = response.data.recording_mode;
+        this.status = response.data.status;
         this.error = null;
         this.isLoading = false;
       } catch {
