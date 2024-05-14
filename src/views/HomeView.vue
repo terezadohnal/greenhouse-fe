@@ -120,15 +120,6 @@ export default {
     return {
       userData: [
         {label: 'Measurement 1', value: '2024/04/05'},
-        {label: 'Measurement 2', value: '2024/04/05'},
-        {label: 'Measurement 3', value: '2024/04/05'},
-        {label: 'Measurement 4', value: '2024/04/05'},
-        {label: 'Measurement 5', value: '2024/04/05'},
-        {label: 'Measurement 6', value: '2024/04/05'},
-        {label: 'Measurement 7', value: '2024/04/05'},
-        {label: 'Measurement 8', value: '2024/04/05'},
-        {label: 'Measurement 9', value: '2024/04/05'},
-        {label: 'Measurement 10', value: '2024/04/05'},
 
       ],
 
@@ -150,6 +141,15 @@ export default {
     MeasurementDetail, NewMeasurementDialog
   },
 
+  async created() {
+    this.photosRGB = await useMeasurementStore().getRGBPhotos()
+    console.log(this.photosRGB)
+    this.photosRGB.map((photo, index) => {
+      let measurementText = photo.replace(/_\d+\.png$/, '')
+      this.userData.push({label: `RGB measurement ${index} `, value: measurementText})
+    })
+  },
+
   methods: {
     toggleMenu(menu) {
       this[menu] = !this[menu];
@@ -162,12 +162,11 @@ export default {
 
     async measureRGB() {
       this.photosRGB = await useMeasurementStore().measureTestRGB()
-      console.log(this.photosRGB)
+      console.log(this.photosRGB.length)
 
     },
 
     getImage(photo) {
-      console.log(Config.backendUrl + '/rgb-photos/' + photo)
       return Config.backendUrl + '/rgb-photos/' + photo
     }
   }

@@ -29,10 +29,43 @@ export const useMeasurementStore = defineStore('measurement', {
 
     actions: {
         async measureTestRGB() {
-            console.log("measurement from store")
             try {
                 this.isLoading = true;
                 const response = await axios.post(config.backendUrl + '/rgb/capturefake')
+
+                // this.token = response.data.access_token; // backend?
+                // axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.token;
+
+                this.error = null;
+                this.loginMessage = null;
+                this.isLoading = false;
+                console.log(response.data)
+                return response.data
+            } catch {
+                this.isLoading = false;
+                this.error = 'Cannot log in, wrong password! Try again.';
+            }
+        },
+
+        async getRGBPhotos() {
+            try {
+                this.isLoading = true;
+                const response = await axios.get(config.backendUrl + '/rgb-photos/how-many/')
+                this.error = null;
+                this.loginMessage = null;
+                this.isLoading = false;
+                console.log(response.data)
+                return response.data
+            } catch {
+                this.isLoading = false;
+                this.error = 'Cannot log in, wrong password! Try again.';
+            }
+        },
+
+        async getRGBPhotosNumber() {
+            try {
+                this.isLoading = true;
+                const response = await axios.post(config.backendUrl + '/rgb-photos/how-many')
 
                 // this.token = response.data.access_token; // backend?
                 // axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.token;
