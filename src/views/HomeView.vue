@@ -76,6 +76,25 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-row justify="center">
+      <v-col cols="auto">
+        <v-btn variant="outlined" @click="measureRGB">
+          Measure RGB
+        </v-btn>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="4" v-for="photo in photosRGB">
+        <v-img
+          :src="getImage(photo)"
+          aspect-ratio="1"
+          class="grey lighten-2"
+        >
+
+        </v-img>
+      </v-col>
+    </v-row>
+
   </v-container>
 </template>
 
@@ -83,10 +102,16 @@
 import MeasurementDetail from "@/components/MeasurementDetail.vue";
 import NewMeasurementDialog from "@/components/NewMeasurementDialog.vue";
 import measurementDetail from "@/components/MeasurementDetail.vue";
+import { useMeasurementStore } from "@/store/MeasurementStore";
+import {mapStores} from "pinia";
+import Config from "@/config";
 
 export default {
   name: "HomeView",
   computed: {
+
+    ...mapStores(useMeasurementStore),
+
     measurementDetail() {
       return measurementDetail
     }
@@ -116,6 +141,7 @@ export default {
       dateSelected: false,
       times: ["From newest", "From oldest", "Custom period"],
       selectedTimeFilter: "From newest",
+      photosRGB: []
     };
 
   },
@@ -133,6 +159,17 @@ export default {
       this[menu] = false;
       this.categorySelected = true;
     },
+
+    async measureRGB() {
+      this.photosRGB = await useMeasurementStore().measureTestRGB()
+      console.log(this.photosRGB)
+
+    },
+
+    getImage(photo) {
+      console.log(Config.backendUrl + '/rgb-photos/' + photo)
+      return Config.backendUrl + '/rgb-photos/' + photo
+    }
   }
 }
 </script>
