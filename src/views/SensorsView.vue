@@ -33,32 +33,60 @@ export default {
           <div class="tab-content" style="margin: 2%">
             <div v-if="activeTab === 'rgbCamera'">
               <v-card-title class="subtitle">List of sensors</v-card-title>
-              <v-row justify="">
-                
+              <v-row>
                 <v-col cols="15" sm="12" md="20">
-
                     <v-table height="320px" density="comfortable">
                       <tbody>
                         <tr class="body_text" v-for="sensor in sensors" :key="sensor.id">
                           <td class="font-weight-bold">{{ sensor.label }}</td>
                           <td>{{ sensor.description }}</td>
                           <td align="right" class="edit-icon-cell">
-                            <v-icon @click="switchSensor">mdi mdi-trash-can-outline</v-icon>
+                            <v-icon @click="switchSensor()">mdi mdi-trash-can-outline</v-icon>
                         </td>
                           <td class="switch"><v-switch color="dark-green" label="" style="margin-top: 20px;"></v-switch></td>
                         </tr>
                       </tbody>
                     </v-table>
-                  
                 </v-col>
               </v-row>
-            
             </div>
             <div v-if="activeTab === 'hyperspectralCamera'">
               <v-card-title class="subtitle">List of sensors</v-card-title>
+              <v-row>
+                <v-col cols="15" sm="12" md="20">
+                    <v-table height="320px" density="comfortable">
+                      <tbody>
+                        <tr class="body_text" v-for="sensor in sensors" :key="sensor.id">
+                          <td class="font-weight-bold">{{ sensor.label }}</td>
+                          <td>{{ sensor.description }}</td>
+                          <td align="right" class="edit-icon-cell">
+                            <v-icon @click="switchSensor()">mdi mdi-trash-can-outline</v-icon>
+                        </td>
+                          <td class="switch"><v-switch color="dark-green" label="" style="margin-top: 20px;"></v-switch></td>
+                        </tr>
+                      </tbody>
+                    </v-table>
+                </v-col>
+              </v-row>
             </div>
             <div v-if="activeTab === 'acousticEmission'">
               <v-card-title class="subtitle">List of sensors</v-card-title>
+              <v-row>
+                <v-col cols="15" sm="12" md="20">
+                    <v-table height="320px" density="comfortable">
+                      <tbody>
+                        <tr class="body_text" v-for="sensor in sensors" :key="sensor.id">
+                          <td class="font-weight-bold">{{ sensor.label }}</td>
+                          <td>{{ sensor.description }}</td>
+                          <td align="right" class="edit-icon-cell">
+                            <v-icon @click="switchSensor()">mdi mdi-trash-can-outline</v-icon>
+                        </td>
+                          <td class="switch"><v-switch color="dark-green" label="" style="margin-top: 20px;"></v-switch></td>
+                        </tr>
+                      </tbody>
+                    </v-table>
+                </v-col>
+              </v-row>
             </div>
           </div>
         </v-card>
