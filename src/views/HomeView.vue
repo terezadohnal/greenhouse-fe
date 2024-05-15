@@ -145,7 +145,6 @@ export default {
 
   async created() {
     this.photosRGB = await this.measurementStore.getRGBPhotos()
-    console.log(this.photosRGB)
     this.photosRGB.map((photo, index) => {
       this.rgbData.push({label: `RGB measurement ${index} `, value: photo})
     })
@@ -172,7 +171,6 @@ export default {
     },
 
     getImage(photo) {
-      console.log(Config.backendUrl + '/rgb-photos/' + photo)
       return Config.backendUrl + '/rgb-photos/' + photo
     }
   }

@@ -56,7 +56,6 @@ export const useMeasurementStore = defineStore('measurement', {
                 this.error = null;
                 this.loginMessage = null;
                 this.isLoading = false;
-                console.log(response.data)
                 return response.data
             } catch {
                 this.isLoading = false;
@@ -75,7 +74,6 @@ export const useMeasurementStore = defineStore('measurement', {
                 this.error = null;
                 this.loginMessage = null;
                 this.isLoading = false;
-                console.log(response.data)
                 return response.data
             } catch {
                 this.isLoading = false;

@@ -70,7 +70,6 @@ export default {
     },
 
     getImage(photo) {
-      console.log(Config.backendUrl + '/rgb-photos/' + photo)
       return Config.backendUrl + '/rgb-photos/' + photo
     }
   }
