@@ -55,17 +55,17 @@
       </div>
     </v-container>
 
-    <v-row justify="center"> <!-- Table of measurements-->
+    <v-row v-if="photosRGB.length > 0" justify="center"> <!-- Table of measurements-->
       <v-col cols="12" sm="8" md="6">
         <v-card elevation="4">
-          <v-card-title class="headline">History of measurements</v-card-title>
+          <v-card-title class="headline">History of RGB measurements</v-card-title>
           <v-table height="400px" density="comfortable">
             <tbody>
-            <tr v-for="item in userData" :key="item.label">
+            <tr v-for="item in rgbData" :key="item.label">
               <td class="font-weight-bold">{{ item.label }}</td>
               <td>{{ item.value }}</td>
               <td align="right">
-                <measurement-detail></measurement-detail>
+                <measurement-detail :measurement="item"></measurement-detail>
               </td>
               <td align="center">
                 <v-icon @click="downloadMeasurement(item.label)">mdi-download</v-icon>
@@ -73,6 +73,13 @@
             </tr>
             </tbody>
           </v-table>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row v-else justify="center">
+      <v-col cols="12" sm="8" md="6">
+        <v-card elevation="4">
+          <v-card-title class="headline">There are no measurements at this time</v-card-title>
         </v-card>
       </v-col>
     </v-row>
@@ -112,17 +119,11 @@ export default {
 
     ...mapStores(useMeasurementStore),
 
-    measurementDetail() {
-      return measurementDetail
-    }
   },
+
   data() {
     return {
-      userData: [
-        {label: 'Measurement 1', value: '2024/04/05'},
-
-      ],
-
+      rgbData: [],
       measureMenuOpen: false,
       categoryMenuOpen: false,
       categorySelected: false,
@@ -132,7 +133,8 @@ export default {
       dateSelected: false,
       times: ["From newest", "From oldest", "Custom period"],
       selectedTimeFilter: "From newest",
-      photosRGB: []
+      photosRGB: [],
+      loading: false
     };
 
   },
@@ -142,11 +144,11 @@ export default {
   },
 
   async created() {
-    this.photosRGB = await useMeasurementStore().getRGBPhotos()
+    this.photosRGB = await this.measurementStore.getRGBPhotos()
     console.log(this.photosRGB)
     this.photosRGB.map((photo, index) => {
       let measurementText = photo.replace(/_\d+\.png$/, '')
-      this.userData.push({label: `RGB measurement ${index} `, value: measurementText})
+      this.rgbData.push({label: `RGB measurement ${index} `, value: measurementText})
     })
   },
 
@@ -161,9 +163,14 @@ export default {
     },
 
     async measureRGB() {
-      this.photosRGB = await useMeasurementStore().measureTestRGB()
-      console.log(this.photosRGB.length)
-
+      this.loading = true
+      this.photosRGB = await this.measurementStore.measureTestRGB()
+      this.rgbData = []
+      this.photosRGB.map((photo, index) => {
+        let measurementText = photo.replace(/_\d+\.png$/, '')
+        this.rgbData.push({label: `RGB measurement ${index} `, value: measurementText})
+      })
+      this.loading = false
     },
 
     getImage(photo) {
