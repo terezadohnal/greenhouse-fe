@@ -147,8 +147,7 @@ export default {
     this.photosRGB = await this.measurementStore.getRGBPhotos()
     console.log(this.photosRGB)
     this.photosRGB.map((photo, index) => {
-      let measurementText = photo.replace(/_\d+\.png$/, '')
-      this.rgbData.push({label: `RGB measurement ${index} `, value: measurementText})
+      this.rgbData.push({label: `RGB measurement ${index} `, value: photo})
     })
   },
 
@@ -167,13 +166,13 @@ export default {
       this.photosRGB = await this.measurementStore.measureTestRGB()
       this.rgbData = []
       this.photosRGB.map((photo, index) => {
-        let measurementText = photo.replace(/_\d+\.png$/, '')
-        this.rgbData.push({label: `RGB measurement ${index} `, value: measurementText})
+        this.rgbData.push({label: `RGB measurement ${index} `, value: photo})
       })
       this.loading = false
     },
 
     getImage(photo) {
+      console.log(Config.backendUrl + '/rgb-photos/' + photo)
       return Config.backendUrl + '/rgb-photos/' + photo
     }
   }

@@ -15,11 +15,11 @@
           </v-col>
         </v-row>
         <v-list lines="two" class="ml-2">
-          <v-list-item title="Title" subtitle="Measurement 1"></v-list-item>
-          <v-list-item title="Date" :subtitle="'This measurement took place on: '+ 'date'"></v-list-item>
-          <v-list-item title="Type of measurement" subtitle="type"></v-list-item>
+          <v-list-item title="Title" :subtitle="measurement.label"></v-list-item>
+          <v-list-item title="Date" :subtitle="'This measurement took place on: '+ measurement.value"></v-list-item>
+          <v-list-item title="Type of measurement" :subtitle="measurement.label.includes('RGB') ? 'RGB' : 'Hyperspektrálna kamera'"></v-list-item>
           <v-list-item title="Images"> <!--v-if="measurement.type === 'RGB'"-->
-            <v-img class="mt-2" src='@/assets/loading_image.png'></v-img>
+            <v-img aspect-ratio="1" class="grey lighten-2" :src="getImage(measurement.value)"></v-img>
           </v-list-item>
         </v-list>
 
@@ -43,6 +43,8 @@
 //import {useMeasurementStore} from "@/store/MeasurementStore";
 //import {mapStores} from "pinia";
 
+import Config from "@/config";
+
 export default {
   name: "MeasurementDetail",
 
@@ -61,12 +63,16 @@ export default {
   },
 
   created() {
-    console.log(this.measurement)
   },
 
   methods: {
     async download(measurement) {
     },
+
+    getImage(photo) {
+      console.log(Config.backendUrl + '/rgb-photos/' + photo)
+      return Config.backendUrl + '/rgb-photos/' + photo
+    }
   }
 }
 </script>
