@@ -8,9 +8,11 @@
       <v-card title="Measurement Information" rounded="xl">
 
         <v-list lines="two" class="ml-2">
-          <v-list-item title="Title" subtitle="Measurement 1"></v-list-item>
-          <v-list-item title="Date" :subtitle="'This measurement took place on: '+ 'date'"></v-list-item>
-          <v-list-item title="Type of measurement" subtitle="type"></v-list-item>
+          <v-list-item title="Title" :subtitle="'Measurement ' + measurement.order"></v-list-item>
+          <v-list-item title="Date" :subtitle="'This measurement took place on: '+ measurement.date"></v-list-item>
+          <v-list-item title="Type of measurement" v-if="measurement.isAcoustic === true && measurement.isCamera === true" subtitle="Acoustic emission, RGB camera"></v-list-item>
+          <v-list-item title="Type of measurement" v-if="measurement.isAcoustic === true" subtitle="Acoustic emission"></v-list-item>
+          <v-list-item title="Type of measurement" v-else subtitle="RGB camera"></v-list-item>
           <v-list-item title="Images"> <!--v-if="measurement.type === 'RGB'"-->
             <v-img class="mt-2" src='@/assets/loading_image.png'></v-img>
           </v-list-item>
@@ -33,8 +35,8 @@
 </template>
 
 <script>
-//import {useMeasurementStore} from "@/store/MeasurementStore";
-//import {mapStores} from "pinia";
+import {useMeasurementStore} from "@/store/MeasurementStore";
+import {mapStores} from "pinia";
 
 export default {
   name: "MeasurementDetail",
@@ -48,7 +50,7 @@ export default {
   },
 
   computed: {
-    //...mapStores(useMeasurementStore)
+    ...mapStores(useMeasurementStore)
   },
 
   methods: {
