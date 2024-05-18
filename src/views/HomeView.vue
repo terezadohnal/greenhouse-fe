@@ -68,7 +68,7 @@
                 <measurement-detail :measurement="measurement"></measurement-detail>
               </td>
               <td align="center">
-                <v-icon @click="downloadMeasurement(item.label)">mdi-download</v-icon>
+                <v-icon @click="download(measurement.name)">mdi-download</v-icon>
               </td>
             </tr>
             </tbody>
@@ -84,6 +84,8 @@ import NewMeasurementDialog from "@/components/NewMeasurementDialog.vue";
 import MeasurementDetail from "@/components/MeasurementDetail.vue";
 import {mapStores} from "pinia";
 import {useMeasurementStore} from "@/store/MeasurementStore";
+import axios from "axios";
+import config from "@/config";
 
 export default {
   name: "HomeView",
@@ -125,6 +127,22 @@ export default {
       this[selection] = item;
       this[menu] = false;
       this.categorySelected = true;
+    },
+    async download(fileName) {
+      try {
+        await axios.get(`${config.backendUrl}/data/download_data_FileResponse?measurement=${fileName}`, { responseType: 'blob' })
+        .then(response => {
+          const blob = new Blob([response.data], { type: 'application/x-zip-compressed' })
+          const link = document.createElement('a')
+          link.href = URL.createObjectURL(blob)
+          link.download = fileName
+          link.click()
+          URL.revokeObjectURL(link.href)
+        }).catch(console.error)
+      } catch (error) {
+        console.error('Download failed:', error);
+        throw new Error('Cannot download measurement');
+      }
     },
   }
 }
