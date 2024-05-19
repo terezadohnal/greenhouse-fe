@@ -90,18 +90,6 @@
         </v-btn>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col cols="4" v-for="photo in photosRGB">
-        <v-img
-          :src="getImage(photo)"
-          aspect-ratio="1"
-          class="grey lighten-2"
-        >
-
-        </v-img>
-      </v-col>
-    </v-row>
-
   </v-container>
 </template>
 
@@ -145,8 +133,11 @@ export default {
 
   async created() {
     this.photosRGB = await this.measurementStore.getRGBPhotos()
+
+
+
     this.photosRGB.map((photo, index) => {
-      this.rgbData.push({label: `RGB measurement ${index} `, value: photo})
+      this.rgbData.push({label: `RGB measurement ${index} `, value: photo.replace(/_\d+\.png$/, ''), photo: photo})
     })
   },
 
