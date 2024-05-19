@@ -38,7 +38,6 @@ export const useUserStore = defineStore('user', {
                         'Content-Type': "application/x-www-form-urlencoded"
                     }
                 })
-
                 this.token = response.data.access_token; // backend?
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.token;
                 localStorage.setItem('token', this.token);

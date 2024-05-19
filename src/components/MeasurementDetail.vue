@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v max-width="500">
+  <v-dialog max-width="500">
     <template v-slot:activator="{ props: activatorProps }">
       <v-icon v-bind="activatorProps" size="20">mdi-eye-outline</v-icon>
     </template>
@@ -46,6 +46,9 @@ import axios, {AxiosHeaders as Buffer} from "axios";
 
 
 import Config from "@/config";
+<script>
+import {useMeasurementStore} from "@/store/MeasurementStore";
+import {mapStores} from "pinia";
 
 export default {
   name: "MeasurementDetail",
@@ -61,7 +64,7 @@ export default {
   },
 
   computed: {
-    //...mapStores(useMeasurementStore)
+    ...mapStores(useMeasurementStore)
   },
 
   created() {
