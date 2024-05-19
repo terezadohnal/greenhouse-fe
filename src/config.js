@@ -1,3 +1,3 @@
 export default {
-    backendUrl: 'http://localhost:3000'
-}
+  backendUrl: process.env.APP_SERVER_URL,
+};
