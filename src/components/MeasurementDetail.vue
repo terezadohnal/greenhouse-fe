@@ -39,16 +39,10 @@
   </v-dialog>
 </template>
 
-<script >
-//import {useMeasurementStore} from "@/store/MeasurementStore";
-//import {mapStores} from "pinia";
-import axios, {AxiosHeaders as Buffer} from "axios";
-
-
-import Config from "@/config";
 <script>
 import {useMeasurementStore} from "@/store/MeasurementStore";
 import {mapStores} from "pinia";
+import Config from "@/config";
 
 export default {
   name: "MeasurementDetail",
@@ -67,8 +61,6 @@ export default {
     ...mapStores(useMeasurementStore)
   },
 
-  created() {
-  },
 
   methods: {
     async download(url) {
@@ -82,7 +74,5 @@ export default {
   }
 }
 </script>
-
 <style>
-
 </style>

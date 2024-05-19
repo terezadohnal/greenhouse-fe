@@ -118,7 +118,7 @@
                 <measurement-detail :measurement="item"></measurement-detail>
               </td>
               <td align="center">
-                <v-icon @click="downloadMeasurement(item.label)">mdi-download</v-icon>
+                <v-icon @click="download(item)">mdi-download</v-icon>
               </td>
             </tr>
             </tbody>
@@ -145,15 +145,11 @@
 
 <script>
 import NewMeasurementDialog from '@/components/NewMeasurementDialog.vue';
-import MeasurementDetail from '@/components/MeasurementDetail.vue';
-import { mapStores } from 'pinia';
 import { useMeasurementStore } from '@/store/MeasurementStore';
 import MeasurementDetail from "@/components/MeasurementDetail.vue";
-import NewMeasurementDialog from "@/components/NewMeasurementDialog.vue";
-import measurementDetail from "@/components/MeasurementDetail.vue";
-import { useMeasurementStore } from "@/store/MeasurementStore";
-import {mapStores} from "pinia";
 import Config from "@/config";
+import {mapStores} from "pinia";
+
 
 export default {
   name: 'HomeView',
@@ -195,11 +191,7 @@ export default {
 
   async created() {
     useMeasurementStore().loadAll();
-
     this.photosRGB = await this.measurementStore.getRGBPhotos()
-
-
-
     this.photosRGB.map((photo, index) => {
       this.rgbData.push({label: `RGB measurement ${index} `, value: photo.replace(/_\d+\.png$/, ''), photo: photo})
     })
@@ -213,6 +205,11 @@ export default {
       this[selection] = item;
       this[menu] = false;
       this.categorySelected = true;
+    },
+
+    download(photo) {
+      const link = Config.backendUrl + '/rgb-photos/' + photo.photo
+      window.open(link)
     },
 
     async measureRGB() {
