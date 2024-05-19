@@ -7,12 +7,22 @@ export const useMeasurementStore = defineStore('measurement', {
     return {
       error: null,
       isLoading: false,
-      recordingMode: null,
-      status: 0,
+      measurements: [],
     };
   },
 
   actions: {
+    async loadAll() {
+      try {
+        this.isLoading = true;
+        const response = await axios.get(config.backendUrl + '/data/get_data');
+        this.measurements = response.data;
+        this.error = null;
+        this.isLoading = false;
+      } catch {
+        this.error = 'Cannot load measurements';
+      }
+    },
     async startAEMeasurement() {
       try {
         this.isLoading = true;

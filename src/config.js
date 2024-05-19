@@ -1,3 +1,3 @@
 export default {
-    backendUrl: 'http://localhost:3000'
-}
+  backendUrl: import.meta.env.VITE_API_URL,
+};

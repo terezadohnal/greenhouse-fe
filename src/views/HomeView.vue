@@ -96,11 +96,15 @@
           <v-card-title class="headline">History of measurements</v-card-title>
           <v-table height="400px" density="comfortable">
             <tbody>
-              <tr v-for="item in userData" :key="item.label">
-                <td class="font-weight-bold">{{ item.label }}</td>
-                <td>{{ item.value }}</td>
+              <tr v-for="measurement in measurements" :key="measurement.id">
+                <td class="font-weight-bold">
+                  Measurement {{ measurement.order }}
+                </td>
+                <td>{{ measurement.date }}</td>
                 <td align="right">
-                  <measurement-detail></measurement-detail>
+                  <measurement-detail
+                    :measurement="measurement"
+                  ></measurement-detail>
                 </td>
                 <td align="center">
                   <v-icon @click="downloadMeasurement(item.label)"
@@ -117,32 +121,22 @@
 </template>
 
 <script>
-import MeasurementDetail from '@/components/MeasurementDetail.vue';
 import NewMeasurementDialog from '@/components/NewMeasurementDialog.vue';
-import measurementDetail from '@/components/MeasurementDetail.vue';
+import MeasurementDetail from '@/components/MeasurementDetail.vue';
+import { mapStores } from 'pinia';
+import { useMeasurementStore } from '@/store/MeasurementStore';
 
 export default {
   name: 'HomeView',
   computed: {
-    measurementDetail() {
-      return measurementDetail;
+    ...mapStores(useMeasurementStore),
+
+    measurements() {
+      return useMeasurementStore().measurements;
     },
   },
   data() {
     return {
-      userData: [
-        { label: 'Measurement 1', value: '2024/04/05' },
-        { label: 'Measurement 2', value: '2024/04/05' },
-        { label: 'Measurement 3', value: '2024/04/05' },
-        { label: 'Measurement 4', value: '2024/04/05' },
-        { label: 'Measurement 5', value: '2024/04/05' },
-        { label: 'Measurement 6', value: '2024/04/05' },
-        { label: 'Measurement 7', value: '2024/04/05' },
-        { label: 'Measurement 8', value: '2024/04/05' },
-        { label: 'Measurement 9', value: '2024/04/05' },
-        { label: 'Measurement 10', value: '2024/04/05' },
-      ],
-
       measureMenuOpen: false,
       categoryMenuOpen: false,
       categorySelected: false,
@@ -163,6 +157,10 @@ export default {
   components: {
     MeasurementDetail,
     NewMeasurementDialog,
+  },
+
+  created() {
+    useMeasurementStore().loadAll();
   },
 
   methods: {
