@@ -1,3 +1,3 @@
 export default {
-  backendUrl: process.env.APP_SERVER_URL,
+  backendUrl: import.meta.env.VITE_API_URL,
 };
