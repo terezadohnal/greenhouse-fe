@@ -160,8 +160,10 @@ export default {
         filtered = filtered.filter((measurement) => measurement.isCamera);
       } else if (this.selectedCategory === 'AE') {
         filtered = filtered.filter((measurement) => measurement.isAcoustic);
+        this.rgbData = [];
       } else if (this.selectedCategory === 'HS') {
         filtered = [];
+        this.rgbData = [];
       }
 
       // Sort by date (measure)
