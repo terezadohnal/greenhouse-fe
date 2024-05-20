@@ -202,7 +202,7 @@ export default {
 
     async assignCorrectData(photos) {
       this.rgbData = []
-      if (photos) {
+      if (Array.isArray(photos) && photos.length > 0) {
         photos.map((photo, index) => {
           this.rgbData.push({label: `RGB measurement ${index} `, value: photo.replace(/_\d+\.png$/, ''), photo: photo})
           // sort by value
