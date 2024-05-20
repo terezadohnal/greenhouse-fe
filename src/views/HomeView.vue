@@ -106,7 +106,7 @@
                   ></measurement-detail>
                 </td>
                 <td align="center">
-                  <v-icon @click="downloadMeasurement(item.label)"
+                  <v-icon @click="downloadMeasurement(measurement.name)"
                     >mdi-download</v-icon
                   >
                 </td>
@@ -142,7 +142,7 @@ import { useMeasurementStore } from '@/store/MeasurementStore';
 import MeasurementDetail from "@/components/MeasurementDetail.vue";
 import Config from "@/config";
 import {mapStores} from "pinia";
-
+import axios from "axios";
 
 export default {
   name: 'HomeView',
@@ -239,7 +239,24 @@ export default {
 
     getImage(photo) {
       return Config.backendUrl + '/rgb-photos/' + photo
-    }
+    },
+
+    async downloadMeasurement(fileName) {
+      try {
+        await axios.get(`${config.backendUrl}/data/download_data_FileResponse?measurement=${fileName}`, { responseType: 'blob' })
+        .then(response => {
+          const blob = new Blob([response.data], { type: 'application/x-zip-compressed' })
+          const link = document.createElement('a')
+          link.href = URL.createObjectURL(blob)
+          link.download = fileName
+          link.click()
+          URL.revokeObjectURL(link.href)
+        }).catch(console.error)
+      } catch (error) {
+        console.error('Download failed:', error);
+        throw new Error('Cannot download measurement');
+      }
+    },
   }
 }
 </script>
