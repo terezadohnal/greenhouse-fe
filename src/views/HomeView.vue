@@ -50,7 +50,7 @@
           </template>
           <v-list>
             <v-list-item>
-              <new-measurement-dialog type="now" />
+              <new-measurement-dialog @rgb-photos="assignPhotos" type="now" />
             </v-list-item>
             <v-list-item>
               <new-measurement-dialog type="schedule" />
@@ -86,11 +86,30 @@
                   >
                 </td>
               </tr>
+              <tr v-for="item in rgbData" :key="item.label">
+                <td class="font-weight-bold">{{ item.label }}</td>
+                <td>{{ item.value }}</td>
+                <td align="right">
+                  <measurement-detail :measurement="item"></measurement-detail>
+                </td>
+                <td align="center">
+                  <v-icon @click="download(item)">mdi-download</v-icon>
+                </td>
+              </tr>
             </tbody>
           </v-table>
         </v-card>
       </v-col>
     </v-row>
+    <!-- <v-row v-else justify="center">
+      <v-col cols="12" sm="8" md="6">
+        <v-card elevation="4">
+          <v-card-title class="headline"
+            >There are no measurements at this time</v-card-title
+          >
+        </v-card>
+      </v-col>
+    </v-row> -->
   </v-container>
 </template>
 
@@ -100,6 +119,7 @@ import MeasurementDetail from '@/components/MeasurementDetail.vue';
 import { mapActions, mapState } from 'pinia';
 import { useMeasurementStore } from '@/store/MeasurementStore';
 import { categories, timeOrder } from '../helpers/constants';
+import Config from '@/config';
 
 export default {
   name: 'HomeView',
@@ -109,6 +129,7 @@ export default {
   },
   data() {
     return {
+      rgbData: [],
       measureMenuOpen: false,
       categoryMenuOpen: false,
       categorySelected: false,
@@ -118,6 +139,8 @@ export default {
       selectedCategory: 'ALL',
       timeOrder,
       selectedTimeFilter: 'DESC',
+      photosRGB: [],
+      loading: false,
     };
   },
 
@@ -156,6 +179,63 @@ export default {
     toggleMenu(menu) {
       this[menu] = !this[menu];
     },
+
+    parseCustomDateString(dateString) {
+      // Split the date and time components
+      const datePart = dateString.split('-').slice(0, 3).join('-');
+      const timePart = dateString.split('-').slice(3).join(':');
+      return new Date(`${datePart}T${timePart}`);
+    },
+
+    async assignCorrectData(photos) {
+      this.rgbData = [];
+      if (photos) {
+        photos.map((photo, index) => {
+          this.rgbData.push({
+            label: `RGB measurement ${index} `,
+            value: photo.replace(/_\d+\.png$/, ''),
+            photo: photo,
+          });
+          // sort by value
+          this.rgbData.sort((b, a) => {
+            const dateA = this.parseCustomDateString(a.value);
+            const dateB = this.parseCustomDateString(b.value);
+            return dateA - dateB;
+          });
+        });
+      }
+    },
+
+    selectItem(item, selection, menu) {
+      this[selection] = item;
+      this[menu] = false;
+      this.categorySelected = true;
+    },
+
+    assignPhotos(photos) {
+      this.assignCorrectData(photos);
+    },
+
+    download(photo) {
+      const link = Config.backendUrl + '/rgb-photos/' + photo.photo;
+      window.open(link);
+    },
+
+    async measureRGB() {
+      this.loading = true;
+      this.photosRGB = await this.measurementStore.measureTestRGB();
+      this.assignCorrectData(this.photosRGB);
+      this.loading = false;
+    },
+
+    getImage(photo) {
+      return Config.backendUrl + '/rgb-photos/' + photo;
+    },
+  },
+
+  async created() {
+    this.photosRGB = await this.measurementStore.getRGBPhotos();
+    this.assignCorrectData(this.photosRGB);
   },
 
   async mounted() {

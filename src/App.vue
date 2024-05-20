@@ -23,7 +23,6 @@ export default {
       return useUserStore().isAuthenticated
     },
   },
-
   data () {
 	return {
 	  //
