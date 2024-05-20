@@ -183,7 +183,7 @@ export default {
   },
 
   async created() {
-    useMeasurementStore().loadAll()
+    await useMeasurementStore().loadAll()
     this.photosRGB = await this.measurementStore.getRGBPhotos()
     this.assignCorrectData(this.photosRGB)
   },
