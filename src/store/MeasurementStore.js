@@ -30,6 +30,21 @@ export const useMeasurementStore = defineStore('measurement', {
 
     actions: {
 
+        async loadAll() {
+            try {
+                this.isLoading = true;
+                const response = await axios.get(config.backendUrl + '/data/get_data')
+                console.log(response.data)
+                this.measurements = response.data;
+                this.error = null;
+                this.loginMessage = null;
+                this.isLoading = false;
+            } catch {
+                this.isLoading = false;
+                this.error = 'Cannot load measurements';
+            }
+        },
+
         async startAEMeasurement() {
             try {
                 this.isLoading = true;

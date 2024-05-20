@@ -183,7 +183,7 @@ export default {
   },
 
   async created() {
-    // useMeasurementStore().loadAll();
+    useMeasurementStore().loadAll()
     this.photosRGB = await this.measurementStore.getRGBPhotos()
     this.assignCorrectData(this.photosRGB)
   },
@@ -213,7 +213,6 @@ export default {
           });
         })
       }
-
     },
 
     selectItem(item, selection, menu) {
