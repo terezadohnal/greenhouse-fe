@@ -89,7 +89,7 @@
       </div>
     </v-container>
 
-    <v-row v-if="photosRGB?.length > 0" justify="center"> <!-- Table of measurements-->
+    <v-row v-if="photosRGB?.length > 0 || measurements?.length > 0" justify="center"> <!-- Table of measurements-->
       <v-col cols="12" sm="8" md="6">
         <v-card elevation="4">
           <v-card-title class="headline">History of measurements</v-card-title>
@@ -185,7 +185,7 @@ export default {
   async created() {
     await useMeasurementStore().loadAll()
     this.photosRGB = await this.measurementStore.getRGBPhotos()
-    this.assignCorrectData(this.photosRGB)
+    await this.assignCorrectData(this.photosRGB)
   },
 
   methods: {
