@@ -79,7 +79,7 @@
           </template>
           <v-list>
             <v-list-item>
-              <new-measurement-dialog type="now" />
+              <new-measurement-dialog :rgb-photos="assignPhotos" type="now" />
             </v-list-item>
             <v-list-item>
               <new-measurement-dialog type="schedule" />
@@ -205,6 +205,11 @@ export default {
       this[selection] = item;
       this[menu] = false;
       this.categorySelected = true;
+    },
+
+    assignPhotos(photos) {
+      console.log(photos)
+      this.photosRGB = photos
     },
 
     download(photo) {

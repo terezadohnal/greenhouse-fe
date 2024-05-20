@@ -206,7 +206,13 @@ export default {
     },
 
     async startRGBMeasurement() {
-      await this.measurementStore.startRGBMeasurement();
+      // await this.measurementStore.startRGBMeasurement();
+
+      let photosRGB = await this.measurementStore.measureTestRGB()
+      console.log(photosRGB)
+
+      // emit data to parent
+      this.$emit('rgb-photos', photosRGB)
 
       if (this.measurementStore.error) {
         this.showAlert = true;

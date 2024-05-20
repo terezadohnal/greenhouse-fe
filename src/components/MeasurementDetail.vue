@@ -11,7 +11,7 @@
             <v-card-title class="text-h5">Measurement Information</v-card-title>
           </v-col>
           <v-col class="pr-6" cols="auto">
-            <v-icon @click="() => isActive.value = false" size="30">mdi-close-circle</v-icon>
+            <v-icon @click="() => isActive.value = false" size="30">mdi-close</v-icon>
           </v-col>
         </v-row>
         <v-list lines="two" class="ml-2">
