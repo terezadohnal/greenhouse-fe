@@ -60,7 +60,10 @@
       </div>
     </v-container>
 
-    <v-row justify="center">
+    <v-row
+      v-if="!filteredMeasurements.length || !rgbData.length"
+      justify="center"
+    >
       <!-- Table of measurements-->
       <v-col cols="12" sm="8" md="6">
         <v-card elevation="4">
@@ -101,7 +104,7 @@
         </v-card>
       </v-col>
     </v-row>
-    <!-- <v-row v-else justify="center">
+    <v-row v-else justify="center">
       <v-col cols="12" sm="8" md="6">
         <v-card elevation="4">
           <v-card-title class="headline"
@@ -109,7 +112,7 @@
           >
         </v-card>
       </v-col>
-    </v-row> -->
+    </v-row>
   </v-container>
 </template>
 
@@ -150,6 +153,8 @@ export default {
     filteredMeasurements() {
       let filtered = this.measurements;
 
+      console.log({ measurement: this.measurements });
+
       // Filter by category
       if (this.selectedCategory === 'RGB') {
         filtered = filtered.filter((measurement) => measurement.isCamera);
@@ -175,7 +180,11 @@ export default {
   },
 
   methods: {
-    ...mapActions(useMeasurementStore, ['loadAll']),
+    ...mapActions(useMeasurementStore, [
+      'loadAll',
+      'measureTestRGB',
+      'getRGBPhotos',
+    ]),
     toggleMenu(menu) {
       this[menu] = !this[menu];
     },
@@ -223,7 +232,7 @@ export default {
 
     async measureRGB() {
       this.loading = true;
-      this.photosRGB = await this.measurementStore.measureTestRGB();
+      this.photosRGB = await this.measureTestRGB();
       this.assignCorrectData(this.photosRGB);
       this.loading = false;
     },
@@ -234,7 +243,7 @@ export default {
   },
 
   async created() {
-    this.photosRGB = await this.measurementStore.getRGBPhotos();
+    this.photosRGB = await this.getRGBPhotos();
     this.assignCorrectData(this.photosRGB);
   },
 
