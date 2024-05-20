@@ -243,7 +243,7 @@ export default {
 
     async downloadMeasurement(fileName) {
       try {
-        await axios.get(`${config.backendUrl}/data/download_data_FileResponse?measurement=${fileName}`, { responseType: 'blob' })
+        await axios.get(`${Config.backendUrl}/data/download_data_FileResponse?measurement=${fileName}`, { responseType: 'blob' })
         .then(response => {
           const blob = new Blob([response.data], { type: 'application/x-zip-compressed' })
           const link = document.createElement('a')
