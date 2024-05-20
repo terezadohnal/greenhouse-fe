@@ -17,7 +17,7 @@
         <v-list lines="two" class="ml-2">
           <v-list-item title="Title" :subtitle="measurement.label"></v-list-item>
           <v-list-item title="Date" :subtitle="'This measurement took place on: '+ measurement.value"></v-list-item>
-          <v-list-item title="Type of measurement" :subtitle="measurement.label.includes('RGB') ? 'RGB' : 'Hyperspektrálna kamera'"></v-list-item>
+          <v-list-item title="Type of measurement" :subtitle="measurement.label?.includes('RGB') ? 'RGB' : 'Hyperspektrálna kamera'"></v-list-item>
           <v-list-item title="Images"> <!--v-if="measurement.type === 'RGB'"-->
             <v-img aspect-ratio="1" class="grey lighten-2" :src="getImage(measurement.photo)"></v-img>
           </v-list-item>
