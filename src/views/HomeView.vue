@@ -79,7 +79,7 @@
           </template>
           <v-list>
             <v-list-item>
-              <new-measurement-dialog :rgb-photos="assignPhotos" type="now" />
+              <new-measurement-dialog @rgb-photos="assignPhotos" type="now" />
             </v-list-item>
             <v-list-item>
               <new-measurement-dialog type="schedule" />
@@ -89,7 +89,7 @@
       </div>
     </v-container>
 
-    <v-row v-if="photosRGB.length > 0" justify="center"> <!-- Table of measurements-->
+    <v-row v-if="photosRGB?.length > 0" justify="center"> <!-- Table of measurements-->
       <v-col cols="12" sm="8" md="6">
         <v-card elevation="4">
           <v-card-title class="headline">History of measurements</v-card-title>
@@ -131,13 +131,6 @@
         <v-card elevation="4">
           <v-card-title class="headline">There are no measurements at this time</v-card-title>
         </v-card>
-      </v-col>
-    </v-row>
-    <v-row justify="center">
-      <v-col cols="auto">
-        <v-btn variant="outlined" @click="measureRGB">
-          Measure RGB
-        </v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -192,15 +185,37 @@ export default {
   async created() {
     useMeasurementStore().loadAll();
     this.photosRGB = await this.measurementStore.getRGBPhotos()
-    this.photosRGB.map((photo, index) => {
-      this.rgbData.push({label: `RGB measurement ${index} `, value: photo.replace(/_\d+\.png$/, ''), photo: photo})
-    })
+    this.assignCorrectData(this.photosRGB)
   },
 
   methods: {
     toggleMenu(menu) {
       this[menu] = !this[menu];
     },
+
+    parseCustomDateString(dateString) {
+      // Split the date and time components
+      const datePart = dateString.split('-').slice(0, 3).join('-');
+      const timePart = dateString.split('-').slice(3).join(':');
+      return new Date(`${datePart}T${timePart}`);
+    },
+
+    async assignCorrectData(photos) {
+      this.rgbData = []
+      if (photos) {
+        photos.map((photo, index) => {
+          this.rgbData.push({label: `RGB measurement ${index} `, value: photo.replace(/_\d+\.png$/, ''), photo: photo})
+          // sort by value
+          this.rgbData.sort((b, a) => {
+            const dateA = this.parseCustomDateString(a.value);
+            const dateB = this.parseCustomDateString(b.value);
+            return dateA - dateB;
+          });
+        })
+      }
+
+    },
+
     selectItem(item, selection, menu) {
       this[selection] = item;
       this[menu] = false;
@@ -208,8 +223,7 @@ export default {
     },
 
     assignPhotos(photos) {
-      console.log(photos)
-      this.photosRGB = photos
+      this.assignCorrectData(photos)
     },
 
     download(photo) {
@@ -220,10 +234,7 @@ export default {
     async measureRGB() {
       this.loading = true
       this.photosRGB = await this.measurementStore.measureTestRGB()
-      this.rgbData = []
-      this.photosRGB.map((photo, index) => {
-        this.rgbData.push({label: `RGB measurement ${index} `, value: photo})
-      })
+      this.assignCorrectData(this.photosRGB)
       this.loading = false
     },
 

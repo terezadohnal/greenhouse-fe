@@ -102,6 +102,27 @@ export const useMeasurementStore = defineStore('measurement', {
             }
         },
 
+        async measureRGB() {
+            try {
+                this.isLoading = true;
+                const response = await axios.post(config.backendUrl + '/rgb/capture')
+
+                this.error = null;
+                this.loginMessage = null;
+                this.isLoading = false;
+
+                if (response.data || response.data.length === 0) {
+                    this.error = 'Cannot measure RGB photos, check the camera connection.';
+                    return;
+                }
+
+                return response.data
+            } catch {
+                this.isLoading = false;
+                this.error = 'Cannot measure RGB photos, check the camera connection.';
+            }
+        },
+
         async getRGBPhotos() {
             try {
                 this.isLoading = true;

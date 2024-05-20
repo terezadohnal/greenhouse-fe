@@ -23,7 +23,6 @@ export const useModeStore = defineStore('mode', {
                 this.mode = mode;
                 this.error = null;
                 this.isLoading = false;
-                console.log('Mode set to: ' + mode)
             } catch {
                 this.isLoading = false;
                 this.error = 'Cannot set mode!';
