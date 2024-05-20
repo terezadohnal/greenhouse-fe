@@ -4,6 +4,10 @@ export const categories = [
     text: 'RGB camera',
   },
   {
+    value: 'HS',
+    text: 'Hyperspectral camera',
+  },
+  {
     value: 'AE',
     text: 'Acoustic emission',
   },
