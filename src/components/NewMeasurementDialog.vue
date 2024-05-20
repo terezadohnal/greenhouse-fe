@@ -133,7 +133,7 @@
               max-width="80%"
               v-model="showAlert"
               closable
-              title="Recording failed! Please try again."
+              :title="errorMessage"
               type="error"
               variant="tonal"
             ></v-alert>
@@ -147,6 +147,8 @@
 <script>
 import { mapStores } from 'pinia';
 import { useMeasurementStore } from '@/store/MeasurementStore';
+import { useModeStore } from "@/store/ModeStore";
+
 export default {
   name: 'NewMeasurementDialog',
 
@@ -161,7 +163,7 @@ export default {
       selectedTime: null,
       panel: null,
       showAlert: false,
-      errorMessage: null,
+      errorMessage: "Recording failed! Please try again.",
       rules: {
         required: (value) => !!value || 'Required.',
       },
@@ -169,6 +171,7 @@ export default {
   },
   computed: {
     ...mapStores(useMeasurementStore),
+    ...mapStores(useModeStore),
   },
   methods: {
     scheduleMeasurement() {
@@ -206,12 +209,25 @@ export default {
     },
 
     async startRGBMeasurement() {
-      await this.measurementStore.startRGBMeasurement();
+      // await this.measurementStore.startRGBMeasurement();
 
+      let photosRGB = []
+      if (this.modeStore.mode === 'production') {
+        photosRGB = await this.measurementStore.measureRGB()
+      } else {
+        photosRGB = await this.measurementStore.measureTestRGB()
+      }
+
+      // emit data to parent
+      if (photosRGB?.length > 0) {
+        this.$emit('rgb-photos', photosRGB)
+        this.dialog = false;
+      }
       if (this.measurementStore.error) {
         this.showAlert = true;
         this.errorMessage = this.measurementStore.error;
       }
+
     },
 
     closeDialog() {

@@ -79,7 +79,7 @@
           </template>
           <v-list>
             <v-list-item>
-              <new-measurement-dialog type="now" />
+              <new-measurement-dialog @rgb-photos="assignPhotos" type="now" />
             </v-list-item>
             <v-list-item>
               <new-measurement-dialog type="schedule" />
@@ -89,8 +89,7 @@
       </div>
     </v-container>
 
-    <v-row justify="center">
-      <!-- Table of measurements-->
+    <v-row v-if="photosRGB?.length > 0" justify="center"> <!-- Table of measurements-->
       <v-col cols="12" sm="8" md="6">
         <v-card elevation="4">
           <v-card-title class="headline">History of measurements</v-card-title>
@@ -112,8 +111,25 @@
                   >
                 </td>
               </tr>
+            <tr v-for="item in rgbData" :key="item.label">
+              <td class="font-weight-bold">{{ item.label }}</td>
+              <td>{{ item.value }}</td>
+              <td align="right">
+                <measurement-detail :measurement="item"></measurement-detail>
+              </td>
+              <td align="center">
+                <v-icon @click="download(item)">mdi-download</v-icon>
+              </td>
+            </tr>
             </tbody>
           </v-table>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row v-else justify="center">
+      <v-col cols="12" sm="8" md="6">
+        <v-card elevation="4">
+          <v-card-title class="headline">There are no measurements at this time</v-card-title>
         </v-card>
       </v-col>
     </v-row>
@@ -122,13 +138,16 @@
 
 <script>
 import NewMeasurementDialog from '@/components/NewMeasurementDialog.vue';
-import MeasurementDetail from '@/components/MeasurementDetail.vue';
-import { mapStores } from 'pinia';
 import { useMeasurementStore } from '@/store/MeasurementStore';
+import MeasurementDetail from "@/components/MeasurementDetail.vue";
+import Config from "@/config";
+import {mapStores} from "pinia";
+
 
 export default {
   name: 'HomeView',
   computed: {
+
     ...mapStores(useMeasurementStore),
 
     measurements() {
@@ -137,6 +156,7 @@ export default {
   },
   data() {
     return {
+      rgbData: [],
       measureMenuOpen: false,
       categoryMenuOpen: false,
       categorySelected: false,
@@ -149,9 +169,12 @@ export default {
       selectedCategory: 'All categories',
       dateMenuOpen: false,
       dateSelected: false,
+      photosRGB: [],
+      loading: false,
       times: ['From newest', 'From oldest', 'Custom period'],
       selectedTimeFilter: 'From newest',
     };
+
   },
 
   components: {
@@ -159,21 +182,68 @@ export default {
     NewMeasurementDialog,
   },
 
-  created() {
+  async created() {
     useMeasurementStore().loadAll();
+    this.photosRGB = await this.measurementStore.getRGBPhotos()
+    this.assignCorrectData(this.photosRGB)
   },
 
   methods: {
     toggleMenu(menu) {
       this[menu] = !this[menu];
     },
+
+    parseCustomDateString(dateString) {
+      // Split the date and time components
+      const datePart = dateString.split('-').slice(0, 3).join('-');
+      const timePart = dateString.split('-').slice(3).join(':');
+      return new Date(`${datePart}T${timePart}`);
+    },
+
+    async assignCorrectData(photos) {
+      this.rgbData = []
+      if (photos) {
+        photos.map((photo, index) => {
+          this.rgbData.push({label: `RGB measurement ${index} `, value: photo.replace(/_\d+\.png$/, ''), photo: photo})
+          // sort by value
+          this.rgbData.sort((b, a) => {
+            const dateA = this.parseCustomDateString(a.value);
+            const dateB = this.parseCustomDateString(b.value);
+            return dateA - dateB;
+          });
+        })
+      }
+
+    },
+
     selectItem(item, selection, menu) {
       this[selection] = item;
       this[menu] = false;
       this.categorySelected = true;
     },
-  },
-};
+
+    assignPhotos(photos) {
+      this.assignCorrectData(photos)
+    },
+
+    download(photo) {
+      const link = Config.backendUrl + '/rgb-photos/' + photo.photo
+      window.open(link)
+    },
+
+    async measureRGB() {
+      this.loading = true
+      this.photosRGB = await this.measurementStore.measureTestRGB()
+      this.assignCorrectData(this.photosRGB)
+      this.loading = false
+    },
+
+    getImage(photo) {
+      return Config.backendUrl + '/rgb-photos/' + photo
+    }
+  }
+}
 </script>
 
-<style></style>
+<style>
+</style>
