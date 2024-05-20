@@ -23,6 +23,8 @@
 
       <v-spacer class="hidden-md-and-down"></v-spacer>
 
+      <v-switch color="black" v-model="mode" value="test" @change="changeMode" class="mr-4" hide-details label="Test mode" inset></v-switch>
+
       <v-menu anchor="bottom end" v-model="userMenuShown">
         <template v-slot:activator="{ props }">
           <v-btn color="black" icon="mdi-account-circle" v-bind="props"></v-btn>
@@ -39,6 +41,7 @@
 
 <script>
 import { useUserStore } from '@/store/UserStore';
+import { useModeStore} from "@/store/ModeStore";
 import { mapStores } from 'pinia';
 
 export default {
@@ -47,15 +50,24 @@ export default {
   data() {
     return {
       userMenuShown: false,
+      mode: ""
     };
+  },
+
+  created() {
+    this.mode = useModeStore().getMode
+    console.log(this.mode)
   },
 
   computed: {
     ...mapStores(useUserStore),
+    ...mapStores(useModeStore),
 
     isAuthenticated() {
       return useUserStore().isAuthenticated;
     },
+
+
   },
 
   methods: {
@@ -64,6 +76,11 @@ export default {
       this.$router.push({ name: 'landing' });
       this.userMenuShown = false;
     },
+
+    changeMode() {
+      useModeStore().setMode(this.mode === "test" ? "test" : "production");
+
+    }
   },
 };
 </script>

@@ -50,10 +50,10 @@
           </template>
           <v-list>
             <v-list-item>
-              <v-list-item-title>Right now</v-list-item-title>
+              <new-measurement-dialog type="now" />
             </v-list-item>
             <v-list-item>
-              <new-measurement-dialog></new-measurement-dialog>
+              <new-measurement-dialog type="schedule" />
             </v-list-item>
           </v-list>
         </v-menu>
