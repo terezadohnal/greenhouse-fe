@@ -186,6 +186,7 @@ export default {
     await useMeasurementStore().loadAll()
     this.photosRGB = await this.measurementStore.getRGBPhotos()
     await this.assignCorrectData(this.photosRGB)
+    console.log(this.measurements)
   },
 
   methods: {

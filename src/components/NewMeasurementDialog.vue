@@ -223,6 +223,8 @@ export default {
         this.$emit('rgb-photos', photosRGB)
         this.dialog = false;
       }
+
+
       if (this.measurementStore.error) {
         this.showAlert = true;
         this.errorMessage = this.measurementStore.error;

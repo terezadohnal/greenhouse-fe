@@ -15,10 +15,10 @@
           </v-col>
         </v-row>
         <v-list lines="two" class="ml-2">
-          <v-list-item title="Title" :subtitle="measurement.label"></v-list-item>
-          <v-list-item title="Date" :subtitle="'This measurement took place on: '+ measurement.value"></v-list-item>
+          <v-list-item title="Title" :subtitle="measurement.label ? measurement.label : 'Measurement order'"></v-list-item>
+          <v-list-item title="Date" :subtitle="'This measurement took place on: ' + (measurement.value ? measurement.value : measurement.date)"></v-list-item>
           <v-list-item title="Type of measurement" :subtitle="measurement.label?.includes('RGB') ? 'RGB' : 'Hyperspektrálna kamera'"></v-list-item>
-          <v-list-item title="Images"> <!--v-if="measurement.type === 'RGB'"-->
+          <v-list-item v-if="measurement.photo" title="Images"> <!--v-if="measurement.type === 'RGB'"-->
             <v-img aspect-ratio="1" class="grey lighten-2" :src="getImage(measurement.photo)"></v-img>
           </v-list-item>
         </v-list>
@@ -31,7 +31,7 @@
               variant="tonal"
               color="dark-green"
               text="Download"
-              @click="download(measurement.photo); isActive.value = false"
+              @click="downloadContent()"
           ></v-btn>
         </v-card-actions>
       </v-card>
@@ -43,6 +43,7 @@
 import {useMeasurementStore} from "@/store/MeasurementStore";
 import {mapStores} from "pinia";
 import Config from "@/config";
+import axios from "axios";
 
 export default {
   name: "MeasurementDetail",
@@ -66,6 +67,31 @@ export default {
     async download(url) {
       const link = Config.backendUrl + '/rgb-photos/' + url;
       window.open(link)
+    },
+
+      downloadContent() {
+        if (this.measurement.label?.includes('RGB')) {
+          this.download(this.measurement.photo)
+        } else {
+          this.downloadMeasurement(this.measurement.name)
+        }
+      },
+
+    async downloadMeasurement(fileName) {
+        try {
+            await axios.get(`${Config.backendUrl}/data/download_data_FileResponse?measurement=${fileName}`, { responseType: 'blob' })
+                .then(response => {
+                    const blob = new Blob([response.data], { type: 'application/x-zip-compressed' })
+                    const link = document.createElement('a')
+                    link.href = URL.createObjectURL(blob)
+                    link.download = fileName
+                    link.click()
+                    URL.revokeObjectURL(link.href)
+                }).catch(console.error)
+        } catch (error) {
+            console.error('Download failed:', error);
+            throw new Error('Cannot download measurement');
+        }
     },
 
     getImage(photo) {
